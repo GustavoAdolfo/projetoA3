@@ -1,0 +1,188 @@
+{% load static %}
+{% load sass_tags %}
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>USJT - Engenharias - Projeto A3 2022.2 - Grupo 9</title>
+    <meta name="author" content="Gustavo Adolfo">
+    <meta name="keywords" content="">
+    <meta name="robots" content="index, follow">
+    <meta name="revisit-after" content="7 days" />
+    <meta name="rating" content="14 years" />
+    <meta name="language" content="pt-br">
+    <meta name="email" content="gustavo.adolfo.as@gmail.com" />
+    <meta name="application-name" content="ProjetoA3" />
+    <meta name="custodian" content="Gustavo Adolfo Alencar dos Santos" />
+    <meta name="description"
+        content="Projeto de fim de semestre para as UCs de ***** dos cursos de engenharia da Universidade São Judas Tadeu, campus Mooca (SP)" />
+    <meta name="keywords" content="engenharia, mecânica, materiais, cálculo, viga" />
+    <meta name="copyright" content="2022 - Gustavo Adolfo Alencar dos Santos" />
+
+    <!-- meta tags Dublin Core -->
+    <link rel="schema.dcterms" href="http://purl.org/dc/terms/" />
+    <meta name="dc.date.modified" content="2019-01-27" />
+    <meta name="dc.date.created" content="2017-01-08" />
+    <meta name="dc.creator.address" content="gustavo.adolfo.as@gmail.com" />
+    <meta name="dc.identifier" content="https://www.linkedin.com/in/gustavoadolfoas/" />
+    <meta name="dc.format" content="text/html" />
+    <meta name="dc.type" content="text;image;video" />
+    <meta name="dc.publisher" content="Gustavo Adolfo" />
+    <meta name="dcterms.title" content="Gustavo Adolfo" />
+    <meta name="dc.title.alternative" content="Gustavo Adolfo" lang="pt-BR" />
+
+    <!-- Social meta tags -->
+    <!-- Google -->
+    <meta name="google-signin-scope" content="profile email">
+    <meta name="google-signin-client_id"
+        content="703593820097-bnvsdk7gjdaj9es771d3glqh4fqrfjiv.apps.googleusercontent.com" />
+    <meta itemprop="name" content="Gustavo Adolfo" />
+    <meta itemprop="description"
+        content="Projeto de fim de semestre para as UCs de ***** dos cursos de engenharia da Universidade São Judas Tadeu, campus Mooca (SP)" />
+    <meta itemprop="image" content="favicon-32x32.png" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="favicon-32x32.png" />
+    <meta name="twitter:site" content="@Gu57av0Ad01f0" />
+    <!-- a página no Twitter do projeto (ainda não há) -->
+    <meta name="twitter:title" content="Gustavo Adolfo" />
+    <meta name="twitter:description"
+        content="Projeto de fim de semestre para as UCs de ***** dos cursos de engenharia da Universidade São Judas Tadeu, campus Mooca (SP)" />
+    <meta name="twitter:creator" content="@Gu57av0Ad01f0" />
+    <meta name="twitter:image:src" content="favicon-32x32.png" />
+
+    <!-- Open Graph (Facebook) -->
+    <meta property="og:title" content="Gustavo Adolfo" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.linkedin.com/in/gustavoadolfoas/" />
+    <meta property="og:image" content="favicon-32x32.png" />
+    <meta property="og:description"
+        content="Projeto de fim de semestre para as UCs de ***** dos cursos de engenharia da Universidade São Judas Tadeu, campus Mooca (SP)" />
+    <meta property="og:site_name" content="Gustavo Adolfo" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="article:section" content="LV" />
+    <meta property="article:tag" content="engenharia, mecânica, materiais, cálculo, viga" />
+    <meta property="article:published_time" content="2018-09-16T00:30:00-00:00" />
+    <meta property="article:modified_time" content="2018-09-16T00:30:00-00:00" />
+    <meta property="fb:app_id"
+        content="Projeto de fim de semestre para as UCs de ***** dos cursos de engenharia da Universidade São Judas Tadeu, campus Mooca (SP)" />
+    <meta property="fb:admins"
+        content="Projeto de fim de semestre para as UCs de ***** dos cursos de engenharia da Universidade São Judas Tadeu, campus Mooca (SP)" />
+    <meta property="og:image" content="favicon-32x32.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="120" />
+    <meta property="og:image:height" content="120" />
+
+    <!-- Links -->
+    <link rel="author" href="https://br.linkedin.com/in/gustavoadolfoas" />
+    <link rel="help" href="<%= BASE_URL %>sobre" />
+    <link rel="icon" href="favicon-16x16.png" type="image/jpeg" sizes="16x16" />
+    <link rel="icon" href="favicon-32x32.png" type="image/png" sizes="32x32" />
+
+    <!-- <script src="https://apis.google.com/js/api:client.js"></script> -->
+
+    <!-- Favicons -->
+    <!-- <link rel="apple-touch-icon" href="{% static 'imgs/apple-touch-icon.png' %}" sizes="180x180"> -->
+    <link rel="icon" href="favicon-32x32.png" sizes="32x32" type="image/png">
+    <link rel="icon" href="favicon-16x16.png" sizes="16x16" type="image/png">
+    <link rel="icon" href="favicon.ico">
+    <meta name="theme-color" content="#c9c2c3">
+
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+Tammudu+2:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+    <link href="{% static 'theme.css' %}" rel="stylesheet" type="text/css" />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js"
+        integrity="sha512-2rNj2KJ+D8s1ceNasTIex6z4HWyOnEYLVC3FigGOmyQCZc2eBXKgOxQmo3oKLHyfcj53uz4QMsRCWNbLd32Q1g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous">
+    </script>
+    <style>
+        label {
+            font-weight: 700;
+        }
+
+        input[type="text"]:disabled {
+            background-color: #aaa;
+        }
+
+        #div-nos .card {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="content-page d-flex align-items-stretch flex-column bd-highlight mb-3">
+
+        <div class="container-flex d-flex flex-column flex-md-row flex-grow-1">
+            <nav class="navbar navbar-expand-md navbar-light d-flex flex-md-column align-items-start">
+                <a class="navbar-brand mx-2" href="/">
+                    <img src="{% static 'imgs/home.png'%}" alt="Início" title="Início">
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-toggle="collapse"
+                    data-bs-target="#navbarDefaultMenu" data-target="#navbarDefaultMenu"
+                    aria-controls="navbarDefaultMenu" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse w-100 align-items-start" id="navbarDefaultMenu">
+                    <ul class="navbar-nav w-100 d-flex flex-md-column align-items-start list-group list-group-flush">
+                        <h5 class="px-1 my-2 text-center">ResMat<br/>
+                            <small>Cálculo de Vigas Contínuas</small></h5>
+
+                        <li class="list-group-item list-group-item-action">
+                            <a href="{% url 'vigas:continua' %}" class="nav-link btn btn-dark text-white">Método Matricial de Rigidez</a>
+                        </li>
+                        <!-- <li class="list-group-item list-group-item-action
+                            {% if "books" in request.path and "authors" in request.path %} active {% endif %}">
+                            <a href="#" class="nav-link btn">Lorem ipsum</a></li>
+                        <li class="list-group-item list-group-item-action
+                            {% if "accounts" in request.path and "profile" in request.path %} active {% endif %}"><a
+                                href="#" class="nav-link btn">Lorem ipsum</a>
+                        </li>
+                        <li class="list-group-item list-group-item-action
+                            {% if "borrowings" in request.path and "books" in request.path %} active {% endif %}"><a
+                                href="#" class="nav-link btn">Lorem ipsum</a>
+                        </li> -->
+                    </ul>
+                </div>
+            </nav>
+            <main id="main-content" class="p-2 flex-grow-1">
+                <div id="liveAlertPlaceholder"></div>
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+                    {% if 'safe' in message.extra_tags %}{{ message|safe }}{% else %}{{ message }}{% endif %}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endfor %}
+                {% endif %}
+
+                {% block content %}{% endblock %}
+            </main>
+        </div>
+
+        <footer class="footer h-60 p-2 mt-4 border-top border-dark text-center" style="font-size: 0.65em;">
+            <span class="mx-2">Aquiles Colares de Ospanveira - RA: 820144933</span> &circledcirc;
+            <span class="mx-2">Gustavo Adolfo Alencar dos Santos - RA: 820271356</span> &circledcirc;
+            <span class="mx-2">Rogério dos Santos Cruz - RA: 822166361</span>
+        </footer>
+    </div>
+
+    <script src="https://kit.fontawesome.com/3cf7c3a500.js" crossorigin="anonymous"></script>
+</body>
+
+</html>

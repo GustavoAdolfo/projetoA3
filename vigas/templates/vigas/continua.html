@@ -1,0 +1,412 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container" id="front">
+    <div class="row justify-content-md-center">
+        <div class="col-sm-12">
+            <section id="landing">
+
+                <header class="mb-4">
+                    <h2>Cálculo de Vigas Contínuas</h2>
+                    <h5 class="text-secondary">Método Matricial de Rigidez<br/>Viga Horizontal</h5>
+                </header>
+                {% if not dados %}
+                {% comment %} <blockquote class="my-3 px-2" cite="https://pt.wikipedia.org/wiki/Modelo_de_viga_de_Euler-Bernoulli">
+                    <p class="mb-3">
+                        <small>
+                            O modelo de viga de Euler-Bernoulli é uma simplificação da teoria linear da
+                            elasticidade que fornece meios de calcular as características de deflexão de
+                            uma viga sob um determinado carregamento (estático ou dinâmico), a qual é
+                            constituída por uma equação diferencial parcial linear de quarta ordem. O nome
+                            viga de Euler-Bernoulli foi dado após Jakob Bernoulli ter realizado descobertas
+                            significativas para o avanço desta teoria. Leonhard Euler e Daniel Bernoulli
+                            foram os primeiros a unir essas descobertas numa só teoria por volta de 1750.
+                            Ambos foram orientados por Jakob Bernoulli na Universidade de Basileia, Suíça.
+                        </small>
+                    </p>
+                    <footer class="blockquote-footer text-center">
+                        <cite title="Source Title">Extraído de
+                            <a
+                                href="https://pt.wikipedia.org/wiki/Modelo_de_viga_de_Euler-Bernoulli">Wikipédia</a></cite>
+                    </footer>
+                </blockquote> {% endcomment %}
+                {% endif %}
+
+                <p class="my-3 px-2">
+                    As vigas são uma parte fundamental e importante na parte da engenharia civil e servem de apoio em estruturas. 
+                    Portando, são sempre submetidas a esforços horizontais e verticais e assim necessita-se saber o quanto essa 
+                    estrutura irá resistir em cada circunstância.
+                </p>
+                <p class="my-3 px-2">
+                    O calculo que utilizamos (método matricial de rigidez) é utilizado através da matriz, facilitando assim na 
+                    programação do software. Porém, esses cálculos são perfeitos em vigas contínuas que têm mais pontos de 
+                    apoios e em cargas estáticas.
+                </p>
+
+                <hr />
+                
+                <header class="my-4 bg-secondary text-light p-2">
+                    <h4>Adicione os pontos da sessão</h4>
+                </header>
+                <div class="container">
+
+                    <form action="calculo-matricial/" method="post" class="form mt-4 shadow">
+                        {% csrf_token %}
+                        <div class="row mb-3 py-2 border">
+                            <div class="col-sm-12 col-md-4 align-bottom">
+                                <h5>Características da Viga</h5>
+                            </div>
+                            <div class="col-sm-12 col-md-3">
+                                <label for="inputElasticidade">Elasticidade</label>
+                                <input type="text" name="inputElasticidade" id="inputElasticidade" class="form-control"
+                                    min="0" placeholder="Ex: 20e9" />
+                            </div>
+                            <div class="col-sm-12 col-md-3">
+                                <label for="inputInercia">Inércia</label>
+                                <input type="text" name="inputInercia" id="inputInercia" class="form-control" min="0"
+                                    placeholder="Ex: 3.6e-3" />
+                            </div>
+                            <div class="col-sm-12 col-md-3">
+                                <label for="inputTamanho">Tamanho</label>
+                                <input type="text" name="inputTamanho" id="inputTamanho" class="form-control" min="0"
+                                    placeholder="Ex: 12" />
+                            </div>
+                        </div>
+                        <div class="row mb-3 py-2 border">
+                            <div class="col-sm-12 col-md-6">
+                                <label for="apoio_esquerdo">Apoio Esquerdo</label>
+                                <select id="apoio_esquerdo" name="apoio_esquerdo" class="form-select">
+                                    <option value="0" selected>incorporação</option>
+                                    <option value="1">permite rolagem vertical</option>
+                                    <option value="2">Permite giro mas não deslocamento</option>
+                                    <option value="3">Cantilever</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-12 col-md-6">
+                                <label for="apoio_direito">Apoio Direito</label>
+                                <select id="apoio_direito" name="apoio_direito" class="form-select">
+                                    <option value="0" selected>incorporação</option>
+                                    <option value="1">permite rolagem vertical</option>
+                                    <option value="2">Permite giro mas não deslocamento</option>
+                                    <option value="3">Cantilever</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row" id="div-nos"></div>
+                        <div class="row text-center my-4 py-3">
+                            <div class="col-sm-12 col-md-6 my-2">
+                                <button class="btn btn-secondary" id="btn-adno">Adicionar Seção</button>
+                            </div>
+                            <div class="col-sm-12 col-md-6 my-2">
+                                <input type="submit" value="Calcular" class="btn btn-primary" disabled
+                                    id="btn-calcular-pontos" />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+<div style="display: none; visibility: hidden;">
+    <fieldset>
+        <legend class="lead mb-3">Determine as variáveis de início da seção</legend>
+        <div class="row">
+
+        </div>
+        <div class="row">
+            <div class="col col-md-4">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="carga_inicio" id="carga_inicio1" value="1">
+                    <label class="form-check-label" for="carga_inicio1">
+                        Carga Pontual
+                    </label>
+                </div>
+            </div>
+            <div class="col col-md-4">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="carga_inicio" id="carga_inicio2" value="2"
+                        checked>
+                    <label class="form-check-label" for="carga_inicio2">
+                        Carga Distribuída
+                    </label>
+                </div>
+            </div>
+            <div class="col col-md-4">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="carga_inicio" id="carga_inicio3" value="3">
+                    <label class="form-check-label" for="carga_inicio3">
+                        Carga Momento Concentrado
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col col-md-4">
+                <label
+                    for="valor_carga_inicent you wish to add your event handler to. This element exists as part of the Document Object Moio">Valor</label>
+                <input type="text" name="valor_carga_inicio" id="valor_carga_inicio" class="form-control" min="0"
+                    placeholder="8000" value="8000" />
+            </div>
+            <div class="col col-md-4">
+                <label for="posicao_carga_inicio">Posição</label>
+                <input type="text" name="posicao_carga_inicio" id="posicao_carga_inicio" class="form-control" min="0"
+                    placeholder="0" value="0" />
+            </div>
+            <div class="col col-md-4">
+                <label for="longitude_carga_inicio">Longitude</label>
+                <input type="text" name="longitude_carga_inicio" id="longitude_carga_inicio" class="form-control"
+                    min="0" placeholder="6" value="6" />
+            </div>
+        </div>
+    </fieldset>
+</div>
+
+<script>
+    let qtdNos = 0;
+
+    document.getElementById('btn-adno').addEventListener('click', (e) => {
+        e.preventDefault();
+        const noAtual = qtdNos;
+        const btnId = 'btnSecao_' + noAtual;
+        const colunaId = 'coluna_' + noAtual;
+
+        hidden = document.createElement('input');
+        hidden.setAttribute('type', 'hidden');
+        hidden.setAttribute('value', 'no_' + qtdNos);
+        hidden.setAttribute('name', 'no_' + qtdNos);
+        hidden.setAttribute('id', 'no_' + qtdNos);
+
+        cardBody = document.createElement('div');
+        cardBody.classList.add('card-body');
+        cardBody.append(hidden);
+        cardBody.append(criarTipoCarga());
+        cardBody.append(criarForca());
+        cardBody.append(criarPosicao());
+        cardBody.append(criarDimensao());
+
+        cardHeader = document.createElement('div');
+        cardHeader.classList.add('card-header', 'text-end');
+        icone = document.createElement('i');
+        icone.classList.add('bi', 'bi-trash');
+        btn = document.createElement('button')
+        btn.classList.add('btn', 'btn-small');
+        btn.setAttribute('id', btnId);
+        btn.append(icone);
+        cardHeader.append(btn);
+
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            btnTrash = document.getElementById(btnId);
+            colunaSecao = document.getElementById(colunaId);
+            if (colunaSecao) {
+                colunaSecao.querySelectorAll(`input`).forEach(x => x.remove());
+                colunaSecao.querySelectorAll(`label`).forEach(x => x.remove());
+                select = colunaSecao.querySelectorAll('select').forEach(x => x.remove());
+                colunaSecao.remove();
+            }
+        });
+
+        card = document.createElement('div');
+        card.classList.add('card', 'shadow-lg', 'rounded', 'p-2'); //'bg-secondary');
+        card.append(cardHeader);
+        card.append(cardBody);
+
+        coluna = document.createElement('div');
+        coluna.setAttribute('id', colunaId);
+        coluna.classList.add('col-sm-12', 'col-md-4', 'mb-4');
+        coluna.append(card);
+
+        divNos = document.getElementById('div-nos');
+        divNos.append(coluna);
+
+        qtdNos += 1;
+
+        btnCalcular = document.getElementById('btn-calcular-pontos');
+        if (qtdNos > 0) {
+            btnCalcular.removeAttribute('disabled');
+        } else {
+            btnCalcular.setAttribute('disabled', 'disabled');
+        }
+    })
+
+    function criarElasticidade() {
+        labelElasticidade = document.createElement('label');
+        labelElasticidade.setAttribute('for', 'inputElasticidade_' + qtdNos);
+        labelElasticidade.innerHTML = 'Elasticidade';
+        labelElasticidade.classList.add('form-label');
+
+        inputElasticidade = document.createElement('input');
+        inputElasticidade.classList.add('form-control');
+        inputElasticidade.setAttribute('id', 'inputElasticidade_' + qtdNos);
+        inputElasticidade.setAttribute('name', 'inputElasticidade_' + qtdNos);
+        inputElasticidade.setAttribute('type', 'text');
+        inputElasticidade.setAttribute('placeholder', 'Ex.: 20e9');
+
+        rowElasticidade = document.createElement('div');
+        rowElasticidade.classList.add('row');
+        rowElasticidade.append(labelElasticidade);
+        rowElasticidade.append(inputElasticidade);
+
+        return rowElasticidade;
+    }
+
+    function criarInercia() {
+        labelInercia = document.createElement('label');
+        labelInercia.setAttribute('for', 'inputInercia_' + qtdNos);
+        labelInercia.innerHTML = 'Inércia';
+        labelInercia.classList.add('form-label');
+
+        inputInercia = document.createElement('input');
+        inputInercia.classList.add('form-control');
+        inputInercia.setAttribute('id', 'inputInercia_' + qtdNos);
+        inputInercia.setAttribute('name', 'inputInercia_' + qtdNos);
+        inputInercia.setAttribute('type', 'text');
+        inputInercia.setAttribute('placeholder', 'Ex.: 3.6e-3');
+
+        rowInercia = document.createElement('div');
+        rowInercia.classList.add('row');
+        rowInercia.append(labelInercia);
+        rowInercia.append(inputInercia);
+
+        return rowInercia;
+    }
+
+    function criarDistancia() {
+        labelDistancia = document.createElement('label');
+        labelDistancia.setAttribute('for', 'inputDistancia_' + qtdNos);
+        labelDistancia.innerHTML = 'Distância';
+        labelDistancia.classList.add('form-label');
+
+        inputDistancia = document.createElement('input');
+        inputDistancia.classList.add('form-control');
+        inputDistancia.setAttribute('id', 'inputDistancia_' + qtdNos);
+        inputDistancia.setAttribute('name', 'inputDistancia_' + qtdNos);
+        inputDistancia.setAttribute('type', 'text');
+        inputDistancia.setAttribute('placeholder', 'Ex.: 6');
+
+        rowDistancia = document.createElement('div');
+        rowDistancia.classList.add('row');
+        rowDistancia.append(labelDistancia);
+        rowDistancia.append(inputDistancia);
+
+        return rowDistancia;
+    }
+
+    function criarTipoCarga() {
+
+        labelTipoCarga = document.createElement('label');
+        labelTipoCarga.setAttribute('for', 'inputTipoCarga_' + qtdNos);
+        labelTipoCarga.innerHTML = 'Tipo de Carga';
+        labelTipoCarga.classList.add('form-label');
+
+        optionCargaPontual = document.createElement('option');
+        optionCargaPontual.setAttribute('value', 1);
+        optionCargaPontual.setAttribute('selected', 'selected');
+        optionCargaPontual.innerHTML = 'Carga Pontual';
+        // optionCargaPontual.selected = true;
+
+        optionCargaDistribuida = document.createElement('option');
+        optionCargaDistribuida.setAttribute('value', 2);
+        optionCargaDistribuida.innerHTML = 'Carga Distribuida';
+
+        optionMomentoConcentrado = document.createElement('option');
+        optionMomentoConcentrado.setAttribute('value', 3);
+        optionMomentoConcentrado.innerHTML = 'Momento Concentrado';
+
+        const inputTipoCarga = 'inputTipoCarga_' + qtdNos;
+        const dimensaoId = 'inputDimensao_' + qtdNos;
+        selectTipoCarga = document.createElement('select');
+        selectTipoCarga.classList.add('form-select');
+        selectTipoCarga.setAttribute('id', inputTipoCarga);
+        selectTipoCarga.setAttribute('name', inputTipoCarga);
+        selectTipoCarga.append(optionCargaPontual);
+        selectTipoCarga.append(optionCargaDistribuida);
+        selectTipoCarga.append(optionMomentoConcentrado);
+        selectTipoCarga.addEventListener('change', (e) => {
+            valor = parseInt(document.getElementById(inputTipoCarga).value);
+            inputDimensao = document.getElementById(dimensaoId);
+            if (valor === 2) {
+                inputDimensao.removeAttribute('disabled');
+            } else {
+                inputDimensao.text = ''
+                inputDimensao.value = ''
+                inputDimensao.setAttribute('disabled', 'disabled')
+            }
+        });
+
+        rowTipoCarga = document.createElement('div');
+        rowTipoCarga.classList.add('row');
+        rowTipoCarga.append(labelTipoCarga);
+        rowTipoCarga.append(selectTipoCarga);
+
+        return rowTipoCarga;
+    }
+
+    function criarForca() {
+        labelForca = document.createElement('label');
+        labelForca.setAttribute('for', 'inputForca_' + qtdNos);
+        labelForca.innerHTML = 'Força (valor)';
+        labelForca.classList.add('form-label');
+
+        inputForca = document.createElement('input');
+        inputForca.classList.add('form-control');
+        inputForca.setAttribute('id', 'inputForca_' + qtdNos);
+        inputForca.setAttribute('name', 'inputForca_' + qtdNos);
+        inputForca.setAttribute('type', 'text');
+        inputForca.setAttribute('placeholder', 'Ex.: 8000');
+
+        rowForca = document.createElement('div');
+        rowForca.classList.add('row');
+        rowForca.append(labelForca);
+        rowForca.append(inputForca);
+
+        return rowForca;
+    }
+
+    function criarPosicao() {
+        labelPosicao = document.createElement('label');
+        labelPosicao.setAttribute('for', 'inputPosicao_' + qtdNos);
+        labelPosicao.innerHTML = 'Posição';
+        labelPosicao.classList.add('form-label');
+
+        inputPosicao = document.createElement('input');
+        inputPosicao.classList.add('form-control');
+        inputPosicao.setAttribute('id', 'inputPosicao_' + qtdNos);
+        inputPosicao.setAttribute('name', 'inputPosicao_' + qtdNos);
+        inputPosicao.setAttribute('type', 'text');
+        inputPosicao.setAttribute('placeholder', 'Ex.: 4');
+
+        rowPosicao = document.createElement('div');
+        rowPosicao.classList.add('row');
+        rowPosicao.append(labelPosicao);
+        rowPosicao.append(inputPosicao);
+
+        return rowPosicao;
+    }
+
+    function criarDimensao() {
+        labelDimensao = document.createElement('label');
+        labelDimensao.setAttribute('for', 'inputDimensao_' + qtdNos);
+        labelDimensao.innerHTML = 'Dimensão';
+        labelDimensao.classList.add('form-label');
+
+        inputDimensao = document.createElement('input');
+        inputDimensao.classList.add('form-control');
+        inputDimensao.setAttribute('id', 'inputDimensao_' + qtdNos);
+        inputDimensao.setAttribute('name', 'inputDimensao_' + qtdNos);
+        inputDimensao.setAttribute('type', 'text');
+        inputDimensao.setAttribute('placeholder', 'Ex.: 4');
+        inputDimensao.setAttribute('disabled', 'disabled')
+
+        rowDimensao = document.createElement('div');
+        rowDimensao.classList.add('row');
+        rowDimensao.append(labelDimensao);
+        rowDimensao.append(inputDimensao);
+
+        return rowDimensao;
+    }
+</script>
+{% endblock %}
